@@ -1,6 +1,5 @@
-def main():
-    pass
+from . import start
+from . import help
+from . import echo
 
-
-if __name__ == '__main__':
-    main()
+__all__ = ['start', 'help', 'echo']

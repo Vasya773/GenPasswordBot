@@ -1,11 +1,8 @@
-from telebot.types import Message
 from loader import bot
+from telebot.types import Message
 
 
 @bot.message_handler(commands=['start'])
 def bot_start(message: Message):
-    bot.reply_to(message, f'Привет, {message.from_user.full_name}!')
-
-
-if __name__ == '__main__':
-    bot.infinity_polling()
+    bot.reply_to(message, f'Привет, {message.from_user.full_name}!\n'
+                          f'Напиши мне название города и я пришлю сводку погоды!')

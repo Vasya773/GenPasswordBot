@@ -1,6 +1,4 @@
-def main():
-    pass
+from . import survey
+from . import photo
 
-
-if __name__ == '__main__':
-    main()
+__all__ = ['survey', 'photo']

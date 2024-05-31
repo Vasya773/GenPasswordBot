@@ -1,6 +1,2 @@
-def main():
-    pass
-
-
-if __name__ == '__main__':
-    main()
+from . import default_handlers
+from . import custom_handlers
