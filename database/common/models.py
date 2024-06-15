@@ -6,11 +6,15 @@ db = pw.SqliteDatabase('info.db')
 
 
 class ModelBase(pw.Model):
-    created_at = pw.DateField(default=datetime.now())
+    """ Базовый класс модели, который определяет базу данных """
+
+    created_at = pw.DateField(default=datetime.now)
 
     class Meta():
         database = db
 
 
 class History(ModelBase):
+    """ Класс модели, который расширяет базовый класс """
+
     city = pw.TextField()

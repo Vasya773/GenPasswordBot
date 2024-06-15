@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv, find_dotenv
-from pydantic import SecretStr, StrictStr
+from pydantic import StrictStr
 from pydantic_settings import BaseSettings
 
 if not find_dotenv():
@@ -10,6 +10,8 @@ else:
 
 
 class SiteSettings(BaseSettings):
+    """ Базовый класс для настроек, который переопределяет значения с помощью переменных среды """
+
     host_api: StrictStr = os.getenv('HOST_API', None)
     bot_token: str = os.getenv('BOT_TOKEN', None)
 

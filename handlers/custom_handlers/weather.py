@@ -4,6 +4,7 @@ from config_data.config import api_key
 
 
 def get_weather(city, api):
+    """ Функция получения погодных условий на основе отправленного пользователем города """
 
     code_to_smile = {
         "Clear": "Ясно \U00002600",
@@ -51,6 +52,8 @@ def get_weather(city, api):
         print('Проверьте название города')
 
 
-def main():
+def start_weather():
+    """ Функция получения города от пользователя для определения погодных условий """
+
     city = input('Введите город: ')
     get_weather(city, api_key)

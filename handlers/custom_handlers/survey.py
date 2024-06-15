@@ -5,7 +5,9 @@ from states.contact_information import UserInfoState
 
 
 @bot.message_handler(commands=['survey'])
-def survey(message: Message) -> None:
+def start_survey(message: Message) -> None:
+    """ Функция начала опроса (получение имени пользователя) """
+
     bot.set_state(message.from_user.id, UserInfoState.name, message.chat.id)
     bot.send_message(message.from_user.id, f'Привет, {message.from_user.full_name}. Введи своё имя\n'
                                            f'Нажми /cancel если хочешь закончить')
@@ -13,6 +15,8 @@ def survey(message: Message) -> None:
 
 @bot.message_handler(state='*', commands=['cancel'])
 def any_state(message):
+    """ Функция конца опроса """
+
     bot.send_message(message.chat.id, f'Опрос окончен.\n'
                                       f'Нажми /help для дополнительной информации')
     bot.delete_state(message.from_user.id, message.chat.id)
@@ -20,6 +24,8 @@ def any_state(message):
 
 @bot.message_handler(state=UserInfoState.name)
 def get_name(message: Message) -> None:
+    """ Функция получения возраста от пользователя """
+
     if message.text.isalpha():
         bot.send_message(message.from_user.id, 'Спасибо записал. Теперь введи свой возраст')
         bot.set_state(message.from_user.id, UserInfoState.age, message.chat.id)
@@ -34,6 +40,8 @@ def get_name(message: Message) -> None:
 
 @bot.message_handler(state=UserInfoState.age)
 def get_age(message: Message) -> None:
+    """ Функция получения страны от пользователя """
+
     if message.text.isdigit():
         bot.send_message(message.from_user.id, 'Спасибо записал. Теперь введи свою страну проживания')
         bot.set_state(message.from_user.id, UserInfoState.country, message.chat.id)
@@ -48,6 +56,8 @@ def get_age(message: Message) -> None:
 
 @bot.message_handler(state=UserInfoState.country)
 def get_country(message: Message) -> None:
+    """ Функция получения города от пользователя """
+
     if message.text.isalpha():
         bot.send_message(message.from_user.id, 'Спасибо записал. Теперь введи свой город')
         bot.set_state(message.from_user.id, UserInfoState.city, message.chat.id)
@@ -61,6 +71,8 @@ def get_country(message: Message) -> None:
 
 @bot.message_handler(state=UserInfoState.city)
 def get_city(message: Message) -> None:
+    """ Функция получения номера телефона от пользователя """
+
     if message.text.isalpha():
         bot.send_message(message.from_user.id, 'Спасибо записал. Отправь свой номер нажав н кнопку',
                          reply_markup=request_contact())
@@ -75,6 +87,8 @@ def get_city(message: Message) -> None:
 
 @bot.message_handler(content_types=['text', 'contact'], state=UserInfoState.phone_number)
 def get_contact(message: Message) -> None:
+    """ Функция получения информации на основе проведённого опроса для пользователя """
+
     if message.content_type == 'contact':
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['phone_number'] = message.contact.phone_number

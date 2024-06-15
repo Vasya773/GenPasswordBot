@@ -4,5 +4,7 @@ from telebot.types import Message
 
 @bot.message_handler(commands=['start'])
 def bot_start(message: Message):
+    """ Функция начала взаимодействия с ботом """
+
     bot.reply_to(message, f'Привет, {message.from_user.full_name}!\n'
                           f'Напиши мне название города и я пришлю сводку погоды!')
