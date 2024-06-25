@@ -6,7 +6,7 @@ db = pw.SqliteDatabase('info.db')
 
 
 class ModelBase(pw.Model):
-    """ Базовый класс модели, который определяет базу данных """
+    """ Базовый класс модели, который инициализирует базу данных """
 
     created_at = pw.DateField(default=datetime.now)
 
@@ -17,4 +17,6 @@ class ModelBase(pw.Model):
 class History(ModelBase):
     """ Класс модели, который расширяет базовый класс """
 
-    city = pw.TextField()
+    user_id = pw.IntegerField(primary_key=True)
+    first_name = pw.CharField()
+    response = pw.TextField()

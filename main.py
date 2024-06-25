@@ -1,4 +1,6 @@
 from loader import bot
+from config_data.config import api_key
+import handlers
 from telebot.custom_filters import StateFilter
 from utils.set_bot_commands import set_default_commands
 

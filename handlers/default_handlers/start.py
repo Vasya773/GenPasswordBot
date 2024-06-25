@@ -7,4 +7,5 @@ def bot_start(message: Message):
     """ Функция начала взаимодействия с ботом """
 
     bot.reply_to(message, f'Привет, {message.from_user.full_name}!\n'
-                          f'Напиши мне название города и я пришлю сводку погоды!')
+                          f'Введи команду /city_user или'
+                          f' /help для вызова справки')

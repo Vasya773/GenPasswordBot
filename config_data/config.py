@@ -19,6 +19,8 @@ class SiteSettings(BaseSettings):
 api_key = os.getenv('API_KEY', None)
 DEFAULT_COMMANDS = (
     ('start', 'Запустить бота'),
+    ('city_user', 'Выбрать город'),
+    ('current_weather', 'Текущая погода в городе'),
     ('help', 'Вызвать справку'),
     ('survey', 'Опрос')
 )

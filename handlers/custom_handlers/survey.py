@@ -1,5 +1,5 @@
-from keyboards.reply.contact import request_contact
 from loader import bot
+from keyboards.reply.contact import request_contact
 from telebot.types import Message
 from states.contact_information import UserInfoState
 
@@ -74,7 +74,7 @@ def get_city(message: Message) -> None:
     """ Функция получения номера телефона от пользователя """
 
     if message.text.isalpha():
-        bot.send_message(message.from_user.id, 'Спасибо записал. Отправь свой номер нажав н кнопку',
+        bot.send_message(message.from_user.id, 'Спасибо записал. Отправь свой номер, нажав на кнопку',
                          reply_markup=request_contact())
         bot.set_state(message.from_user.id, UserInfoState.phone_number, message.chat.id)
 

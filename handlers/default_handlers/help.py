@@ -6,6 +6,8 @@ from telebot.types import Message
 def bot_help(message: Message):
     """ Функция вызова справки """
 
-    text = [f'/survey - Опрос']
+    text = [f'/survey - Опрос\n'
+            f'/city_user - Выбрать город\n'
+            f'/current_weather - Текущая погода в городе']
 
     bot.reply_to(message, '\n'.join(text))

@@ -1,18 +1,26 @@
-# from config_data.config import SiteSettings
-# from api.utils.site_api_handler import SiteApiInterface
-#
-# site = SiteSettings()
-#
-# headers = {
-#     "X-RapidAPI-Key": site.api_key.get_secret_value(),
-#     "X-RapidAPI-Host": site.host_api
-# }
-#
-#
-# url = "https://" + site.host_api
-# params = {"json": "true", "fragment": "true"}
-#
-# site_api = SiteApiInterface()
-#
-# if __name__ == '__main__':
-#     site_api()
+import requests
+from typing import Dict
+
+
+def api_request(method_endswith: str, params: Dict, method_type: str):
+    url = f'https://api.openweathermap.org/data/2.5/{method_endswith}'
+
+    if method_type == 'GET':
+        return get_request(
+            url=url,
+            params=params
+        )
+
+
+def get_request(url: str, params: Dict):
+    try:
+        response = requests.get(
+            url=url,
+            params=params,
+            timeout=10
+        )
+        if response.status_code == requests.codes.ok:
+            return response.json()
+    except Exception as exc:
+        print(exc)
+        print('Проверьте название города')

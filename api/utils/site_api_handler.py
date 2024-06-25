@@ -1,12 +1,14 @@
-import requests
+from api.core import api_request
+from typing import Dict
 import datetime
-from loader import bot
-from config_data.config import SiteSettings
-from telebot.types import Message
+import logging
+# from config_data.config import SiteSettings
 
 
-@bot.message_handler()
-def _get_weather(message: Message):
+logging.basicConfig(filename='weather_bot.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
+def get_weather(method_endswith: str, params: Dict, method_type: str):
     code_to_smile = {
         "Clear": "Ясно \U00002600",
         "Clouds": "Облачно \U00002601",
@@ -17,50 +19,59 @@ def _get_weather(message: Message):
         "Mist": "Туман \U0001F32B"
     }
 
-    try:
-        response = requests.get(
-            f'http://api.openweathermap.org/data/2.5/weather?q={message.text}&appid={site.api_key}&units=metric'
-        )
-        data = response.json()
+    # try:
+    # response = requests.get(
+    #     f'http://api.openweathermap.org/data/2.5/weather?q={message.text}&appid={api_key}&units=metric'
+    # )
+    # data = response.json()
+    data = api_request(method_endswith, params, method_type)
 
-        city = data['name']
-        cur_weather = data['main']['temp']
+    city = data['name']
+    cur_weather = data['main']['temp']
 
-        weather_description = data['weather'][0]['main']
-        if weather_description == code_to_smile:
-            wd = code_to_smile[weather_description]
-        else:
-            wd = 'Посмотри в окно, не пойму что там за погода!'
+    weather_description = data['weather'][0]['main']
+    if weather_description == code_to_smile:
+        wd = code_to_smile[weather_description]
+    else:
+        wd = 'Посмотри в окно, не пойму что там за погода!'
 
-        humidity = data['main']['humidity']
-        pressure = data['main']['pressure']
-        wind = data['wind']['speed']
-        sunrise_timestamp = datetime.datetime.fromtimestamp(data['sys']['sunrise'])
-        sunset_timestamp = datetime.datetime.fromtimestamp(data['sys']['sunset'])
-        length_of_the_day = datetime.datetime.fromtimestamp(data['sys']['sunset']) - datetime.datetime.fromtimestamp(
-            data['sys']['sunrise']
-        )
+    humidity = data['main']['humidity']
+    pressure = data['main']['pressure']
+    wind = data['wind']['speed']
+    sunrise_timestamp = datetime.datetime.fromtimestamp(data['sys']['sunrise'])
+    sunset_timestamp = datetime.datetime.fromtimestamp(data['sys']['sunset'])
+    length_of_the_day = datetime.datetime.fromtimestamp(data['sys']['sunset']) - datetime.datetime.fromtimestamp(
+        data['sys']['sunrise']
+    )
 
-        bot.reply_to(f'***{datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}***\n'
-                     f'Погода в городе: {city}\nТемпература: {cur_weather}C° {wd}\n'
-                     f'Влажность: {humidity}%\nДавление: {pressure} мм.рт.ст\nВетер: {wind} м/с\n'
-                     f'Восход солнца: {sunrise_timestamp}\nЗакат солнца: {sunset_timestamp}\n'
-                     f'Продолжительность дня: {length_of_the_day}\n'
-                     f'***Хорошего дня!***'
-                     )
-    except:
-        bot.reply_to('\U00002620 Проверьте название города \U00002620')
+    text = f'***{datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}***\n' \
+           f'Погода в городе: {city}\nТемпература: {cur_weather}C° {wd}\n' \
+           f'Влажность: {humidity}%\nДавление: {pressure} мм.рт.ст\nВетер: {wind} м/с\n' \
+           f'Восход солнца: {sunrise_timestamp}\nЗакат солнца: {sunset_timestamp}\n' \
+           f'Продолжительность дня: {length_of_the_day}\n' \
+           f'***Хорошего дня!***'
 
+    logging.info(f'Успешно получены данные о погоде для {city}')
 
-class SiteApiInterface():
+    return text
 
-    @staticmethod
-    def get_weather():
-        return _get_weather
+    # except requests.exceptions.RequestException as e:
+    #     logging.error(f'Ошибка при получении данных о погоде: {e}')
+    #     bot.reply_to('Проверьте название города')
+    #
+    # except Exception as ex:
+    #     logging.error(f'Ошибка: {ex}')
+    #     bot.reply_to('Что-то пошло не так. Пожалуйста, попробуйте позже.')
 
-
-site = SiteSettings()
-if __name__ == '__main__':
-    _get_weather()
-
-    SiteApiInterface()
+# class SiteApiInterface():
+#
+#     @staticmethod
+#     def get_weather():
+#         return _get_weather
+#
+#
+# site = SiteSettings()
+# if __name__ == '__main__':
+#     _get_weather()
+#
+#     SiteApiInterface()
