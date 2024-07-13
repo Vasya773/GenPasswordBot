@@ -2,6 +2,7 @@ from datetime import datetime
 
 import peewee as pw
 
+
 db = pw.SqliteDatabase('info.db')
 
 
@@ -17,6 +18,6 @@ class ModelBase(pw.Model):
 class History(ModelBase):
     """ Класс модели, который расширяет базовый класс """
 
-    user_id = pw.IntegerField(primary_key=True)
+    user_id = pw.AutoField(primary_key=True)
     first_name = pw.CharField()
     response = pw.TextField()
