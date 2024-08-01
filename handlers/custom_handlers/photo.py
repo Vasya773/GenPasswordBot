@@ -9,7 +9,7 @@ def get_photo(message):
     markup = InlineKeyboardMarkup()
     btn = InlineKeyboardButton('Удалить фото', callback_data='delete')
     markup.row(btn)
-    bot.reply_to(message, f'Какое красивое фото!\nНажми /help чтобы продолжить', reply_markup=markup)
+    bot.reply_to(message, f'Какое красивое фото!\n', reply_markup=markup)
 
 
 @bot.callback_query_handler(func=lambda callback: True)

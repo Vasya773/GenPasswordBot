@@ -1,23 +1,24 @@
-from datetime import datetime
-
 import peewee as pw
 
+db = pw.SqliteDatabase('passwords.db')
 
-db = pw.SqliteDatabase('info.db')
 
+class Password(pw.Model):
+    """ Модель для хранения сгенерированных паролей """
 
-class ModelBase(pw.Model):
-    """ Базовый класс модели, который инициализирует базу данных """
+    password = pw.CharField()
+    user_id = pw.IntegerField()
 
-    created_at = pw.DateField(default=datetime.now)
-
-    class Meta():
+    class Meta:
         database = db
 
 
-class History(ModelBase):
-    """ Класс модели, который расширяет базовый класс """
+class Game(pw.Model):
+    """ Модель для хранения данных игры """
 
-    user_id = pw.AutoField(primary_key=True)
-    first_name = pw.CharField()
-    response = pw.TextField()
+    user_id = pw.IntegerField()
+    number = pw.IntegerField()
+    attempts = pw.IntegerField()
+
+    class Meta:
+        database = db

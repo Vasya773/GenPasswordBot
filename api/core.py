@@ -1,26 +1,32 @@
+from config_data.config import api_key
 import requests
-from typing import Dict
+import string
+import random
+import logging
 
 
-def api_request(method_endswith: str, params: Dict, method_type: str):
-    url = f'https://api.openweathermap.org/data/2.5/{method_endswith}'
-
-    if method_type == 'GET':
-        return get_request(
-            url=url,
-            params=params
-        )
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
-def get_request(url: str, params: Dict):
+def my_password(length: int) -> str:
+    """Генерирует случайный пароль заданной длины."""
+
+    characters = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choice(characters) for _ in range(length))
+
+
+def get_request(length: int) -> str:
+    """Генерирует случайный пароль"""
+
+    url = f'https://api.api-ninjas.com/v1/passwordgenerator?length={length}'
     try:
-        response = requests.get(
-            url=url,
-            params=params,
-            timeout=10
-        )
-        if response.status_code == requests.codes.ok:
-            return response.json()
-    except Exception as exc:
-        print(exc)
-        print('Проверьте название города')
+        response = requests.get(url, headers={'X-Api-Key': api_key})
+        response.raise_for_status()
+        data = response.json()
+        return data.get('random_password', '')
+    except requests.RequestException as e:
+        logger.error(f'Ошибка при генерации пароля через API: {e}')
+        # В случае ошибки запроса используем функцию my_password для генерации пароля
+        logger.info('Используем функцию my_password для генерации случайного пароля.')
+        return my_password(length)

@@ -2,9 +2,19 @@ from loader import bot
 from keyboards.reply.contact import request_contact
 from telebot.types import Message
 from states.contact_information import UserInfoState
+from keyboards.reply.start_reply import gen_markup
 
 
 @bot.message_handler(commands=['survey'])
+def start_survey(message: Message) -> None:
+    """ Функция начала опроса (получение имени пользователя) """
+
+    bot.set_state(message.from_user.id, UserInfoState.name, message.chat.id)
+    bot.send_message(message.from_user.id, f'Привет, {message.from_user.full_name}. Введи своё имя\n'
+                                           f'Нажми /cancel если хочешь закончить')
+
+
+@bot.message_handler(func=lambda message: message.text == 'Опрос 📝')
 def start_survey(message: Message) -> None:
     """ Функция начала опроса (получение имени пользователя) """
 
@@ -17,8 +27,7 @@ def start_survey(message: Message) -> None:
 def any_state(message):
     """ Функция конца опроса """
 
-    bot.send_message(message.chat.id, f'Опрос окончен.\n'
-                                      f'Нажми /help для дополнительной информации')
+    bot.send_message(message.chat.id, f'Опрос окончен.\n', reply_markup=gen_markup())
     bot.delete_state(message.from_user.id, message.chat.id)
 
 
@@ -95,9 +104,8 @@ def get_contact(message: Message) -> None:
 
         text = (f'Спасибо за предоставленную информацию. Ваши данные:\n'
                 f'Имя - {data['name']}\nВозраст - {data['age']}\nСтрана - {data['country']}\n'
-                f'Город - {data['city']}\nНомер телефона - {data['phone_number']}\n'
-                f'Нажми /help для дополнительной информации')
-        bot.send_message(message.from_user.id, text)
+                f'Город - {data['city']}\nНомер телефона - {data['phone_number']}\n')
+        bot.send_message(message.from_user.id, text, reply_markup=gen_markup())
     else:
         bot.send_message(message.from_user.id, 'Чтобы отправить контактную информацию нажми на кнопку\n'
                                                'Попробуй ещё раз')
